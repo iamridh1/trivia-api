@@ -116,6 +116,7 @@ The API will return three error types when requests fail:
 - 404: Resource Not Found
 - 422: Not Processable
 - 405: Method Not Allowed
+- 500: Internal Server Error
 
 ### Endpoints
 
