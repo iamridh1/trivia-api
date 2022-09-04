@@ -20,8 +20,9 @@
 .Question-holder {
   padding: 10px 20px;
   border: 2px black solid;
+  border-radius: 10px;
   text-align: left;
-  margin: 7px;
+  margin: 10px;
 }
 
 .Question-status {
@@ -51,19 +52,22 @@
   color: white;
   padding: 3px 5px;
   margin-left: 0px !important;
+  cursor: pointer;
 }
 
 span.page-num {
+  border: 1px solid black;
+  border-radius: 50%;
   margin: 5px;
-  padding-bottom: 50px;
+  padding: 5px 10px;
   /* color: blue; */
   font-weight: bolder;
-  text-decoration: underline;
   font-size: 16px;
 }
 
 span.page-num.active {
   color: blue;
+  border-color: blue;
 }
 
 img.category {
