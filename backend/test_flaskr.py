@@ -16,8 +16,8 @@ class TriviaTestCase(unittest.TestCase):
         self.client = self.app.test_client
         self.database_name = "trivia_test"
         self.database_path = "postgresql://{}:{}@{}/{}".format(
-            'postgres', 
-            'ridhone', 
+            'student', 
+            'student', 
             'localhost:5432', 
             self.database_name
         )
@@ -42,10 +42,7 @@ class TriviaTestCase(unittest.TestCase):
         """Executed after reach test"""
         pass
 
-    """
-    TODO
-    Write at least one test for each test for successful operation and for expected errors.
-    """
+    
     """ test retrieve categories """
     def test_retrieve_categories(self):
         res = self.client().get('/categories')
