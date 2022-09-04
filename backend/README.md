@@ -355,6 +355,17 @@ Setting the `FLASK_APP` variable to `flaskr` directs flask to use the `flaskr` d
 }
 ```
 
+### Error 500
+- Returns an object with these keys: `success`, `error` and `message`.
+
+```
+{
+  "success": false,
+  "error": 500,
+  "message": "internal server error"
+}
+```
+
 
 
 ## Testing
