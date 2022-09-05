@@ -185,21 +185,24 @@ def create_app(test_config=None):
         body = request.get_json()
         
         quiz_category = body.get("quiz_category", None)
-        previous_ids = body.get("previous_questions", None)
+        previous_questions = body.get("previous_questions", None)
         category_id = quiz_category.get("id")
         
         try:
             # Check category
             if category_id == 0:
-                questions = Question.query.all()
+                selection = Question.query.all()
             else:
-                questions = Question.query.filter(Question.category == category_id).all()
+                selection = Question.query.filter(Question.category == category_id).all()
             
-            questions_formatted = [q.format() for q in questions]
-            current_ids = [q.get("id") for q in questions_formatted]
-            ids = list(set(current_ids).difference(previous_ids))
+            # format questions 
+            formatted_questions = [question.format() for question in selection]
+            # get formatted questions IDs in a list
+            questions_ids = [que.get("id") for que in formatted_questions]
+            # filter previous questions out of questions IDs
+            questions = list(set(questions_ids).difference(previous_questions))
             
-            if len(ids) == 0:
+            if len(questions) == 0:
                 # If the list is empty return no question
                 return jsonify({
                     "success": True,
@@ -207,7 +210,7 @@ def create_app(test_config=None):
                 })
             else:
                 # Choice a random id
-                random_id = random.choice(ids)
+                random_id = random.choice(questions)
 
                 # Get the question
                 question = Question.query.get(random_id)
@@ -216,10 +219,6 @@ def create_app(test_config=None):
                     "success": True,
                     "question": question.format()
                 })
-            return jsonify({
-                "success": True,
-                "question": None
-            })
         except:
             abort(422)
     
