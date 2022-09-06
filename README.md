@@ -26,20 +26,19 @@ Developers using this project should already have:
 
 Project is divided into `frontend` and `backend` directory.
 
-Technologies used in the project:
+#### Frontend
 
-**Frontend**
-- React
-- React Router
-- Jquery
+This project uses NPM to manage software dependencies. NPM Relies on the package.json file located in the frontend directory of this repository. After cloning, open your terminal and run:
 
-**Backend**
-- Flask
-- SQLAlchemy
-- Flask-CORS
+```
+$ npm install
+```
+The frontend app was built using create-react-app. In order to run the app in development mode use npm start. You can change the script in the package.json file.
 
-**Database**
-- PostgreSQL
+```
+$ npm start
+```
+Open http://localhost:3000 to view it in the browser. The page will reload if you make edits.
 
 
 #### Backend 
@@ -66,68 +65,14 @@ flask run
 ```
 The application is run on  ``` http://127.0.0.1:5000/``` by default and is a proxy in the frontend configuration.
 
+## API Endpoints
 
-
-#### Frontend
-
-This project uses NPM to manage software dependencies. NPM Relies on the package.json file located in the frontend directory of this repository. After cloning, open your terminal and run:
-
-```
-$ npm install
-```
-The frontend app was built using create-react-app. In order to run the app in development mode use npm start. You can change the script in the package.json file.
-
-```
-$ npm start
-```
-Open http://localhost:3000 to view it in the browser. The page will reload if you make edits.
-
-
-
-#### Tests
-
-To run the tests, run
-
-```
-dropdb trivia_test
-createdb trivia_test
-psql trivia_test < trivia.psql
-python test_flaskr.py
-```
-
-
-## API Reference
-
-### Error Handling
-
-Errors are returned as JSON objects in the following format:
-
-```
-{
-    "success": False, 
-    "error": 400,
-    "message": "bad request"
-}
-```
-
-The API will return three error types when requests fail:
-
-- 400: Bad Request
-- 404: Resource Not Found
-- 422: Not Processable
-- 405: Method Not Allowed
-- 500: Internal Server Error
-
-### Endpoints
-
-
-**GET /categories**
-
-General:
-- Returns a list of categories, success value
-- Results are paginated in groups of 10. Include a request argument to choose page number, starting from 1.
-
-Sample: ```curl http://127.0.0.1:5000/categories```
+### GET `/categories`
+- Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category.
+- Request arguments: None.
+- Returns:  An object with these keys:
+  - `success`: The success flag
+  - `categories`: Contains a object of `id:category_string` and `key:value pairs`.
 
 ```
 {
@@ -143,13 +88,20 @@ Sample: ```curl http://127.0.0.1:5000/categories```
 }
 ```
 
-**GET /questions?page=1**
-
-General:
-- Returns a paginated list of questions, a total number of questions, all categories and current category string
-- Results are paginated in groups of 10. Include a request argument to choose page number, starting from 1.
-
-Sample: ```curl http://127.0.0.1:5000/questions?page=1```
+### GET `/questions`
+- Fetches:
+  - A list of questions (paginated by 10 items)
+  - A dictionary of categories
+  - The total of questions
+  - The current category
+- Request arguments:
+  - `page` (integer) - The current page
+- Returns: An object with these keys:
+  - `success`: The success flag
+  - `questions`: A list of questions (paginated by 10 items)
+  - `total_questions`: The total of questions
+  - `categories`: A dictionary of categories
+  - `current_category`: The current category
 
 ```
 {
@@ -239,13 +191,13 @@ Sample: ```curl http://127.0.0.1:5000/questions?page=1```
 }
 ```
 
-**DELETE /questions/{id}**
-
-General:
-- Deletes the question of the given ID if it exists. Returns success value.
-
-Sample ```curl -X DELETE http://127.0.0.1:5000/questions/16```
-
+### DELETE `/questions/:question_id/`
+- Delete question using a question ID
+- Request arguments:
+  - `question_id` (integer): The question id
+- Returns: An object with theses keys:
+  - `success` that contains a `boolean`.
+  - `deleted` that contains the ID of the question created.
 
 ```
 {
@@ -254,14 +206,16 @@ Sample ```curl -X DELETE http://127.0.0.1:5000/questions/16```
 }
 ```
 
-**POST /questions**
-
-
-General:
-- Creates a new question using the submitted title, answer, category and difficulty. Returns the id of the created question id, success value, total questions number, and questions list based on current page number to update the frontend
-
-Sample: ```curl http://127.0.0.1:5000/questions -X POST -H "Content-Type: application/json" -d '{"question":"What was the name of the first man-made satellite launched by the Soviet Union in 1957?", "answer": "Sputnik 1","category" :"1", "difficulty":"2"}'```
-
+### POST `/questions`
+- Create a new question.
+- Request arguments:
+  - `question` (string) - The question
+  - `answer` (string) - The answer
+  - `difficulty` (string) - The question difficulty
+  - `category` (string) - The question category
+- Returns: An object with theses keys:
+  - `success` that contains a `boolean`.
+  - `created` that contains the ID of the question created.
 
 ```
 {
@@ -270,15 +224,15 @@ Sample: ```curl http://127.0.0.1:5000/questions -X POST -H "Content-Type: applic
 }
 ```
 
-
-**POST /questions/filters**
-
-
-General:
-- search for a question using the submitted search term. Returns the results, success value, total questions.
-
-
-Sample ```curl http://127.0.0.1:5000/questions/filters -X POST -H "Content-Type: application/json" -d '{"searchTerm" : "who"}'```
+### POST `/questions/filters`
+- Search a question.
+- Request arguments:
+  - `search` (string) - The term to search
+- Returns: An object with these keys:
+  - `success`: The success flag
+  - `questions`: A list of questions
+  - `total_questions`: The total of questions
+  - `current_category`: The current category string
 
 ```
 {
@@ -308,19 +262,19 @@ Sample ```curl http://127.0.0.1:5000/questions/filters -X POST -H "Content-Type:
   ],
   "success": true,
   "total_questions": 3
-}
+}}
 ```
 
-**GET /categories/{id}/questions**
 
-
-General:
-
-- Returns a list of questions, in the given category, category total_questions and success value
-- Results are paginated in groups of 10. Include a request argument to choose page number, starting from 1.
-
-
-Sample: ```curl http://127.0.0.1:5000/categories/3/questions```
+### GET `/categories/:category_id/questions`
+- Fetches a list of questions based on category.
+- Request arguments:
+  - `category_id` (integer): The category id
+- Returns: An object with these keys:
+  - `success`: The success flag
+  - `questions`: A list of questions (paginated by 10 items)
+  - `total_questions`: The total of questions
+  - `current_category`: The current category string
 
 ```
 {
@@ -346,15 +300,14 @@ Sample: ```curl http://127.0.0.1:5000/categories/3/questions```
 }
 ```
 
-**POST /quizzes**
-
-General:
-- recive the actual question and the category
-- return the next question in the same category and success value.
-
-
-Sample```curl http://127.0.0.1:5000/quizzes -X POST -H "Content-Type: application/json" -d '{"quiz_category":{"type":"Geography","id":"3"}, "previous_questions":[13]}'``` 
-
+### POST `/quizzes`
+- Fetches a question to play the quiz.
+- Request arguments:
+  - `quiz_category` (dictionary): The quiz category with the `type` and the `id`.
+  - `previous_ids` (list of strings): The previous questions ids
+- Returns: An object with these keys:
+  - `success`: The success flag
+  - `question`: The question to play
 
 ```
 {
@@ -367,4 +320,76 @@ Sample```curl http://127.0.0.1:5000/quizzes -X POST -H "Content-Type: applicatio
   },
   "success": true
 }
+```
+
+## Errors Handling
+
+### Error 400
+- Returns an object with these keys: `success`, `error` and `message`.
+
+```
+{
+  "success": false,
+  "error": 400,
+  "message": "bad request"
+}
+```
+
+### Error 404
+- Returns an object with these keys: `success`, `error` and `message`.
+
+```
+{
+  "success": false,
+  "error": 404,
+  "message": "resource not found"
+}
+```
+
+### Error 405
+- Returns an object with these keys: `success`, `error` and `message`.
+
+```
+{
+  "success": false,
+  "error": 405,
+  "message": "method not allowed"
+}
+```
+
+### Error 422
+- Returns an object with these keys: `success`, `error` and `message`.
+
+```
+{
+  "success": false,
+  "error": 422,
+  "message": "unprocessable"
+}
+```
+
+### Error 500
+- Returns an object with these keys: `success`, `error` and `message`.
+
+```
+{
+  "success": false,
+  "error": 500,
+  "message": "internal server error"
+}
+```
+
+
+
+## Testing
+
+Write at least one test for the success and at least one error behavior of each endpoint using the unittest library.
+
+To deploy the tests, run
+
+```bash
+dropdb trivia_test
+createdb trivia_test
+psql trivia_test < trivia.psql
+python test_flaskr.py
 ```

@@ -36,14 +36,12 @@ def create_app(test_config=None):
     """
     get all available categories.
     """
-    @app.route("/categories")
+    @app.route("/categories", methods=['GET'])
     def retrieve_categories():
         # get all categories
         categories = Category.query.all()
         # arrange in a id:type pair
-        data = {}
-        for category in categories:
-            data[category.id] = category.type
+        data = {category.id: category.type for category in categories}
         
         return jsonify({
             "success": True,
@@ -155,9 +153,9 @@ def create_app(test_config=None):
     def retrieve_questions_by_categories(category_id):
         try:
             # Retrieve category by id
-            category = Category.query.filter(Category.id == category_id).first()
+            category = Category.query.filter(Category.id == category_id).one_or_none()
             
-            if category:
+            if category is not None:
                 # Retrieve all questions by category id
                 selection = Question.query.filter(Question.category == category_id).all()
                 questions = paginate_questions(request, selection)
@@ -203,22 +201,21 @@ def create_app(test_config=None):
             questions = list(set(questions_ids).difference(previous_questions))
             
             if len(questions) == 0:
-                # If the list is empty return no question
+                # return no question if questions length is 0
                 return jsonify({
                     "success": True,
                     "question": None
                 })
-            else:
-                # Choice a random id
-                random_id = random.choice(questions)
-
-                # Get the question
-                question = Question.query.get(random_id)
-                
-                return jsonify({
-                    "success": True,
-                    "question": question.format()
-                })
+            
+            # Choose a random question
+            question_id = random.choice(questions)
+            # Get the question
+            question = Question.query.get(question_id)
+            
+            return jsonify({
+                "success": True,
+                "question": question.format()
+            })
         except:
             abort(422)
     

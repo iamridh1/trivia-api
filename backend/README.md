@@ -309,7 +309,7 @@ Setting the `FLASK_APP` variable to `flaskr` directs flask to use the `flaskr` d
 }
 ```
 
-## Errors
+## Errors Handling
 
 ### Error 400
 - Returns an object with these keys: `success`, `error` and `message`.
